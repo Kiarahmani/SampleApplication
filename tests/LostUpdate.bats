@@ -2,38 +2,26 @@
 # 
 @setup {
   # Load a script to set up the test environment
-  load test_scripts.sh
+  load tests_scprits.sh
 }
 
-@test '(1) Executing 4 concurrent inc txns' {
+@test '(1) LOST UPDATE anomaly occured' {
   run lu
   assert "$output" equals "(1,100)"
 }
-@test '(2) Executing 4 concurrent inc txns' {
+@test '(2) LOST UPDATE anomaly occured' {
   run lu
   assert "$output" equals "(1,100)"
 }
-@test '(3) Executing 4 concurrent inc txns' {
+@test '(3) LOST UPDATE anomaly occured' {
   run lu
   assert "$output" equals "(1,100)"
 }
-@test '(4) Executing 4 concurrent inc txns' {
+@test '(4) LOST UPDATE anomaly occured' {
   run lu
   assert "$output" equals "(1,100)"
 }
-@test '(5) Executing 4 concurrent inc txns' {
-  run lu
-  assert "$output" equals "(1,100)"
-}
-@test '(6) Executing 4 concurrent inc txns' {
-  run lu
-  assert "$output" equals "(1,100)"
-}
-@test '(7) Executing 4 concurrent inc txns' {
-  run lu
-  assert "$output" equals "(1,100)"
-}
-@test '(8) Executing 4 concurrent inc txns' {
+@test '(5) LOST UPDATE anomaly occured' {
   run lu
   assert "$output" equals "(1,100)"
 }

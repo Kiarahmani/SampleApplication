@@ -10,9 +10,9 @@ import java.util.Properties;
 
 public class MySQLAccess {
 	private Connection connect = null;
-	private Statement statement = null;
+	private Statement stmt = null;
 	private PreparedStatement preparedStatement = null;
-	private ResultSet resultSet = null;
+	private ResultSet rs = null;
 	private int _ISOLATION = Connection.TRANSACTION_READ_UNCOMMITTED;
 	private int insID;
 	Properties p;
@@ -21,6 +21,7 @@ public class MySQLAccess {
 		this.insID = insID;
 		p = new Properties();
 		p.setProperty("ID", String.valueOf(insID));
+		p.setProperty("dbName", "feedback");
 	}
 
 	public void increment(int key) throws Exception {
@@ -28,23 +29,29 @@ public class MySQLAccess {
 
 			Object o = Class.forName("MyDriver").newInstance();
 			DriverManager.registerDriver((Driver) o);
+
 			Driver driver = DriverManager.getDriver("jdbc:mydriver://");
-			connect = driver.connect(null, p);
-			connect.setAutoCommit(false);
-			connect.setTransactionIsolation(_ISOLATION);
-			statement = connect.createStatement();
-			resultSet = statement.executeQuery("select * from feedback.kv where id=1");
-			resultSet.next();
-			int old_val = resultSet.getInt(2);
-			preparedStatement = connect.prepareStatement("update feedback.kv set value=? where id=?");
-			preparedStatement.setInt(1, old_val + 100);
-			preparedStatement.setInt(2, key);
-			preparedStatement.executeUpdate();
-			connect.commit();
+			Connection connect = DriverManager
+					.getConnection("jdbc:mysql://localhost/feedback?" + "user=user1&password=pass1&useSSL=false");
+			//DriverManager.getConnection("jdbc:mysql://localhost:3306/feedback", "user1", "pass1");
+			
+			//connect.setAutoCommit(false);
+			//connect.setTransactionIsolation(_ISOLATION);
+			//stmt = connect.createStatement();
+			//rs = stmt.executeQuery("select * from feedback.kv where id=1");
+			//rs.next();
+
+			//int old_val = rs.getInt(2);
+			//System.out.println(old_val);
+			//preparedStatement = connect.prepareStatement("update feedback.kv set value=? where id=?");
+			//preparedStatement.setInt(1, old_val + 100);
+			//preparedStatement.setInt(2, key);
+			//preparedStatement.executeUpdate();
+			//connect.commit();
 		} catch (Exception e) {
 			throw e;
 		} finally {
-			close();
+			//close();
 		}
 
 	}
@@ -61,11 +68,11 @@ public class MySQLAccess {
 			preparedStatement = connect.prepareStatement("update feedback.kv set value=1000 where id=?");
 			preparedStatement.setInt(1, key);
 			preparedStatement.executeUpdate();
-			Thread.sleep(100);
-			// connect.commit();
+
 			// update 2
 			preparedStatement = connect.prepareStatement("update feedback.kv set value=2000 where id=?");
 			preparedStatement.setInt(1, key);
+			// Thread.sleep(5000);
 			preparedStatement.executeUpdate();
 			connect.commit();
 		} catch (Exception e) {
@@ -78,7 +85,7 @@ public class MySQLAccess {
 
 	public void select(int key) {
 		try {
-			Thread.sleep(50);
+
 			Object o = Class.forName("MyDriver").newInstance();
 			DriverManager.registerDriver((Driver) o);
 			Driver driver = DriverManager.getDriver("jdbc:mydriver://");
@@ -87,9 +94,10 @@ public class MySQLAccess {
 			connect.setTransactionIsolation(_ISOLATION);
 			preparedStatement = connect.prepareStatement("select * from feedback.kv where id=?");
 			preparedStatement.setInt(1, key);
-			resultSet = preparedStatement.executeQuery();
-			resultSet.next();
-			System.out.println("(" + resultSet.getInt("id") + "," + resultSet.getInt("value") + ")");
+			// Thread.sleep(2500);
+			rs = preparedStatement.executeQuery();
+			rs.next();
+			System.out.println("(" + rs.getInt("id") + "," + rs.getInt("value") + ")");
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -103,7 +111,6 @@ public class MySQLAccess {
 			DriverManager.registerDriver((Driver) o);
 			Driver driver = DriverManager.getDriver("jdbc:mydriver://");
 			connect = driver.connect(null, p);
-			statement = connect.createStatement();
 			preparedStatement = connect.prepareStatement("update feedback.kv set value=0 where id=?");
 			preparedStatement.setInt(1, key);
 			preparedStatement.executeUpdate();
@@ -117,10 +124,10 @@ public class MySQLAccess {
 
 	private void close() {
 		try {
-			if (resultSet != null)
-				resultSet.close();
-			if (statement != null)
-				statement.close();
+			if (rs != null)
+				rs.close();
+			if (rs != null)
+				rs.close();
 			if (connect != null)
 				connect.close();
 		} catch (Exception e) {

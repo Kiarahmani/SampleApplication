@@ -25,6 +25,13 @@ public class Transaction {
 				System.err.println("Unknown Operaition Type");
 		} catch (MySQLTransactionRollbackException e) {
 			// retry
+			try {
+				Thread.sleep(10);
+				//System.out.println(".");
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			run(opType);
 		} catch (Exception e) {
 			System.out.println(e);

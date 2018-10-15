@@ -1,8 +1,9 @@
 #!/usr/bin/env zunit
 # 
+
 @setup {
   # Load a script to set up the test environment
-  load test_scripts.sh
+  load tests_scprits.sh
 }
 
 @test '(1) DIRTY READ anomaly occured' {
@@ -22,18 +23,6 @@
   assert "$output" equals "(1,1000)"
 }
 @test '(5) DIRTY READ anomaly occured' {
-  run dr
-  assert "$output" equals "(1,1000)"
-}
-@test '(6) DIRTY READ anomaly occured' {
-  run dr
-  assert "$output" equals "(1,1000)"
-}
-@test '(7) DIRTY READ anomaly occured' {
-  run dr
-  assert "$output" equals "(1,1000)"
-}
-@test '(8) DIRTY READ anomaly occured' {
   run dr
   assert "$output" equals "(1,1000)"
 }

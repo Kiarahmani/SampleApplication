@@ -21,13 +21,15 @@ public class Transaction {
 				dao.initialize(1);
 			else if (opType.equals("double"))
 				dao.doubleUpdate(1);
+			else if (opType.equals("testTransaction"))
+				dao.testTransaction(1);
 			else
 				System.err.println("Unknown Operaition Type");
 		} catch (MySQLTransactionRollbackException e) {
 			// retry
 			try {
 				Thread.sleep(10);
-				//System.out.println(".");
+				// System.out.println(".");
 			} catch (InterruptedException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

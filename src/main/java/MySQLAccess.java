@@ -24,6 +24,31 @@ public class MySQLAccess {
 		p.setProperty("dbName", "feedback");
 	}
 
+	public void testTransaction(int key) throws Exception {
+		try {
+
+			Object o = Class.forName("MyDriver").newInstance();
+			DriverManager.registerDriver((Driver) o);
+			Driver driver = DriverManager.getDriver("jdbc:mydriver://");
+			System.out.println("driver: "+driver);
+			connect = driver.connect("", p);
+			System.out.println("connect: "+connect);
+			connect.setAutoCommit(false);
+			connect.setTransactionIsolation(_ISOLATION);
+			preparedStatement = connect.prepareStatement("select * from feedback.kv where id=?");
+			preparedStatement.setInt(1, key);
+			// Thread.sleep(2500);
+			rs = preparedStatement.executeQuery();
+			rs.next();
+			System.out.println("(" + rs.getInt("id") + "," + rs.getInt("value") + ")");
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			// close();
+		}
+
+	}
+
 	public void increment(int key) throws Exception {
 		try {
 
@@ -33,25 +58,27 @@ public class MySQLAccess {
 			Driver driver = DriverManager.getDriver("jdbc:mydriver://");
 			Connection connect = DriverManager
 					.getConnection("jdbc:mysql://localhost/feedback?" + "user=user1&password=pass1&useSSL=false");
-			//DriverManager.getConnection("jdbc:mysql://localhost:3306/feedback", "user1", "pass1");
-			
-			//connect.setAutoCommit(false);
-			//connect.setTransactionIsolation(_ISOLATION);
-			//stmt = connect.createStatement();
-			//rs = stmt.executeQuery("select * from feedback.kv where id=1");
-			//rs.next();
+			// DriverManager.getConnection("jdbc:mysql://localhost:3306/feedback", "user1",
+			// "pass1");
 
-			//int old_val = rs.getInt(2);
-			//System.out.println(old_val);
-			//preparedStatement = connect.prepareStatement("update feedback.kv set value=? where id=?");
-			//preparedStatement.setInt(1, old_val + 100);
-			//preparedStatement.setInt(2, key);
-			//preparedStatement.executeUpdate();
-			//connect.commit();
+			// connect.setAutoCommit(false);
+			// connect.setTransactionIsolation(_ISOLATION);
+			// stmt = connect.createStatement();
+			// rs = stmt.executeQuery("select * from feedback.kv where id=1");
+			// rs.next();
+
+			// int old_val = rs.getInt(2);
+			// System.out.println(old_val);
+			// preparedStatement = connect.prepareStatement("update feedback.kv set value=?
+			// where id=?");
+			// preparedStatement.setInt(1, old_val + 100);
+			// preparedStatement.setInt(2, key);
+			// preparedStatement.executeUpdate();
+			// connect.commit();
 		} catch (Exception e) {
 			throw e;
 		} finally {
-			//close();
+			// close();
 		}
 
 	}

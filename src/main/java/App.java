@@ -17,6 +17,7 @@ public class App {
 			p.setProperty("ID", "1");
 			p.setProperty("dbName", "feedback");
 
+			Class.forName("com.github.adejanovski.cassandra.jdbc.CassandraDriver");
 			Driver driver = DriverManager.getDriver("jdbc:cassandra://localhost:9042/testks");
 			System.out.println("driver: " + driver);
 			connect = driver.connect("", p);
